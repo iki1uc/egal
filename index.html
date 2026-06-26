@@ -1,1 +1,101 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>DD-Motor – IKI / 1 / UC ICE</title>
+  <style>
+    body {
+      margin: 0;
+      background: #000;
+      color: #0f0;
+      font-family: monospace;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+    .slot {
+      padding: 8px 16px;
+      margin: 4px;
+      border: 1px solid #0f0;
+      min-width: 160px;
+      text-align: center;
+      opacity: 0.2;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .active {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+    .label {
+      font-size: 12px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <div class="slot" id="iki">
+    <div class="label">IKI</div>
+    <div>FIRST</div>
+  </div>
+  <div class="slot" id="one">
+    <div class="label">((( 1 )))</div>
+    <div>Vorlage</div>
+  </div>
+  <div class="slot" id="uc">
+    <div class="label">UC ICE</div>
+    <div>Freeze</div>
+  </div>
+
+  <script>
+    // Grundregel:
+    // alles hält 1 Sekunde
+    // nur der Effekthalter selbst darf entscheiden, ob er 2 Sekunden bleibt
+
+    const slots = [
+      { id: 'iki',  name: 'IKI' },
+      { id: 'one',  name: 'ONE' },
+      { id: 'uc',   name: 'UC ICE' }
+    ];
+
+    let index = 0;
+
+    function decideDuration(slotName) {
+      // hier entscheidest du später „intelligent“
+      // jetzt: 1 Sek, manchmal 2 Sek für Spaß
+      if (slotName === 'IKI') {
+        return Math.random() < 0.4 ? 2000 : 1000;
+      }
+      if (slotName === 'ONE') {
+        return Math.random() < 0.3 ? 2000 : 1000;
+      }
+      if (slotName === 'UC ICE') {
+        return Math.random() < 0.5 ? 2000 : 1000;
+      }
+      return 1000;
+    }
+
+    function tick() {
+      // alle Slots kurz runterfahren
+      slots.forEach(s => {
+        document.getElementById(s.id).classList.remove('active');
+      });
+
+      const current = slots[index];
+      const el = document.getElementById(current.id);
+      el.classList.add('active');
+
+      const duration = decideDuration(current.name);
+
+      setTimeout(() => {
+        index = (index + 1) % slots.length;
+        tick();
+      }, duration);
+    }
+
+    tick();
+  </script>
+</body>
+</html>
 
